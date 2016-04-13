@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
 	char recvline[MAXLINE + 1];
 	struct sockaddr_in server_addr;
 	socklen_t len = sizeof(server_addr);
+	int reuse = 1;
 
 	if (argc != 2)
 		D("%s <server ip address>", argv[0]);
@@ -35,6 +36,8 @@ int main(int argc, char *argv[])
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
 		D("socket");
+	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)))
+		D("setsockopt");
 
 	bzero(&server_addr, sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
